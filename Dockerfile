@@ -10,7 +10,8 @@ COPY go.sum go.sum
 COPY api/ api/
 # cache deps before building and copying source so that we don't need to re-download as much
 # and so that source changes don't invalidate our downloaded layer
-RUN --mount=type=secret,id=netrc,dst=/root/.netrc go mod download
+#RUN --mount=type=secret,id=netrc,dst=/root/.netrc go mod download
+RUN go mod download
 
 # Copy the go source
 COPY main.go main.go

@@ -1,8 +1,8 @@
 
 # Image URL to use all building/pushing image targets
 IMG_TAG ?= $(shell echo "$$(git describe --tags "$$(git rev-parse "HEAD^{commit}")^{commit}" --match v* 2>/dev/null || git rev-parse "HEAD^{commit}")$$([ -z "$$(git status --porcelain 2>/dev/null)" ] || echo -dirty)")
-IMG_REGISTRY ?= ghcr.io
-IMG ?= $(IMG_REGISTRY)/weaveworks/pipeline-controller:$(IMG_TAG)
+IMG_REGISTRY ?= docker.io
+IMG ?= $(IMG_REGISTRY)/choclab/pipeline-controller:$(IMG_TAG)
 GIT_REVISION ?= $(shell echo $$(git rev-parse "HEAD^{commit}")$$([ -z "$$(git status --porcelain 2>/dev/null)" ] || echo -dirty))
 # ENVTEST_K8S_VERSION refers to the version of kubebuilder assets to be downloaded by envtest binary.
 ENVTEST_K8S_VERSION = 1.24.2
@@ -117,7 +117,7 @@ run: manifests generate fmt vet ## Run a controller from your host.
 
 .PHONY: docker-build
 docker-build: ## Build docker image with the manager.
-	docker buildx build --secret id=netrc,src=.netrc -t ${IMG} $(DOCKER_BUILD_ARGS) $(DOCKER_BUILD_LABELS) .
+	docker buildx build -t ${IMG} $(DOCKER_BUILD_ARGS) $(DOCKER_BUILD_LABELS) .
 
 .PHONY: docker-push
 docker-push: DOCKER_BUILD_ARGS=--push --platform linux/arm64/v8,linux/amd64
